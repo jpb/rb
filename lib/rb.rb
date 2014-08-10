@@ -1,0 +1,2 @@
+module RB
+end

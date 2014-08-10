@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+lib = File.expand_path(File.dirname(__FILE__) + '/../lib')
+$LOAD_PATH.unshift(lib) if File.directory?(lib) && !$LOAD_PATH.include?(lib)
+
+require 'optparse'
+require 'rb/runner'
+
+options = {}
+
+OptionParser.new do |opts|
+
+  opts.on('-f', '--filter', 'Filter lines from STDIN, as `line`') do |f|
+    options[:filter] = f
+  end
+
+  opts.on('-a', '--apply', 'Apply commands to lines from STDIN, as `line`') do |a|
+    options[:apply] = a
+  end
+
+  opts.on('-j [OPTIONAL]', '--json [OPTIONAL]', ['input', 'output'], 'Preprocess input or ouput as JSON') do |j|
+    options[:json_input]  = (j != 'output')
+    options[:json_output] = (j != 'input')
+  end
+
+end.parse!
+
+command = ARGV.join(' ')
+RB::Runner.new(options).run(command)
